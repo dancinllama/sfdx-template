@@ -38,7 +38,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "lint-staged"
+            "pre-commit": "lint-staged && sh ./bin/run.sh pmd -d force-app/main/default -R config/pmd.xml -f text"
         }
     },
     "lint-staged": {
