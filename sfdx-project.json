@@ -1,0 +1,13 @@
+{
+    "packageDirectories": [
+        {
+            "path": "force-app",
+            "default": true,
+            "package": "aisle9",
+            "versionName": "1.0",
+            "versionNumber": "1.0.0.NEXT"
+        }
+    ],
+    "namespace": "",
+    "sourceApiVersion": "47.0"
+}
