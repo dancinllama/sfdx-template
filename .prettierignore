@@ -13,6 +13,10 @@
 .github
 sfdx
 bin
+lib
 **/*.tar.gz
 .vscode
+node_modules
+
+
 
