@@ -100,14 +100,27 @@ When you download a repository from a remote repo, such as one stored in github,
 
 From this git extension, you can also start staging my changes for a commit. For instance, you can select all of your changes and right click or cntrl click, and select "Stage changes", which tells your local repository that you are about to commit changes.
 
-Once you're ready to commit the staged changes, select the files you'd like to commit and click the checkmark icon (seen in the picture below) to commit them. Make sure to provide a short, but descriptive commit message to go along with the commit. If you're commit files related to a agile
+Once you're ready to commit the staged changes, select the files you'd like to commit and click the checkmark icon (seen in the picture below) to commit them. Make sure to provide a short, but descriptive commit message to go along with the commit. If you're committing files related to an agile user story for instance, you should use the story id / number in the commit message.
 
-## How do I use this on a project?
+After commit the changes to your local repository, the final step is to push them up to the remote repository.
 
--   Copy the template to a new repository
--   If working with existing code, retrieve the existing source.
-    -   Open VS Code
-    -   Using the Explorer, locate "manifest/package.xml"
-    -   Right-click and select "Create Project from Manifest"
+## Recommended Visual Studio Code Extensions
 
-Template project for sfdx. Includes git workflow, prettier config, and more.
+Below are a few of the extensions Demand Chain recommends for use with Visual Studio Code. These extensions can be installed via the market place within VS Code.
+
+-   Salesforce Extension Pack (of course!)
+-   Salesforce Documenter (for adding documentation headers to Apex classes, triggers, LWCs, etc.)
+-   Apex PMD (for analyzing your Salesforce code. This is also part of the commit hooks and git workflow)
+-   Prettier - Code Formatter (for formatting code)
+-   Trailing Spaces (for highlighting and deleting those pesky spaces at the end of lines)
+-   heroku cli (For working with heroku apps)
+-   ESLint (for linting JavaScript files and Lightning Web Components)
+-   Markdown Preview Github Styling (for working with github README files)
+
+## Recommended Git Clients
+
+The following can be used for working with Git
+
+-   Source Tree (very nice, intuitive interface https://www.sourcetreeapp.com/)
+-   The VS Code extension (should come with vscode)
+-   Terminal / CLI (quick and easy for simple tasks, not very good for comparing code or complicated tasks)
