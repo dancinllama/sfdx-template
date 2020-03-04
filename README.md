@@ -1,5 +1,25 @@
 # Template for SFDX Projects
 
+## Build Status
+
+![SFDX Template Commit Flow](https://github.com/dancinllama/aisle9/workflows/onpush/badge.svg)
+
+## Deploy to a Scratch Org
+
+[![Deploy](https://deploy-to-sfdx.com/dist/assets/images/DeployToSFDX.svg)](https://deploy-to-sfdx.com)
+
+## Table of Contents
+
+-   [Description](#description)
+-   [Getting started with this template](#getting-started-with-this-template)
+-   [Starting with VS Code](#starting-with-vs-code)
+    -   [Authenticate with the Developer Hub](#authenticate-with-the-developer-hub)
+    -   [Working with an existing Salesforce org for the first time](#working-with-an-existing-salesforce-org-for-the-first-time)
+    -   [Working with a file](#working-with-a-file)
+    -   [Commiting Files to Source Control](#commiting-files-to-source-control)
+-   [Recommended Visual Studio Code Extensions](#recommended-visual-studio-code-extensions)
+-   [Recommended Git Clients](#recommended-git-clients)
+
 ## Description
 
 This repository is a template for SFDX projects. It includes the following:
@@ -18,12 +38,20 @@ This repository is a template for SFDX projects. It includes the following:
 
 -   Copy the template to a new repository
 
--   Clone that repository to your local workspace.
+    -   Click on `Use this template` button on the sfdx-template repository home page
+
+    ![Use this template button](./misc/img/templatebutton.png)
+
+    -   Fill in the desired information on the new repository form.
+
+    ![new repository form](./misc/img/newtemplateform.png)
+
+*   Clone that repository to your local workspace.
 
     -   Use your git client of choice (VS Code extension, Source Tree, or the git CLI)
     -   The repository url will be the format: https://github.com/username/repository_name.git
 
--   In order to run the commit hooks:
+*   In order to run the commit hooks:
 
     -   Download and install node from here: https://nodejs.org/en
     -   Open your command prompt or terminal.
@@ -40,12 +68,12 @@ Now that you've created a repository, it's time to put something in it and start
 
 ### Authenticate with the Developer Hub
 
-When opening VS Code for the first time, you'll want to authorize the developer hub. The developer hub is an org (Demand Chain's production org for instance), that, along with Salesforce DX, is used to spin up scratch orgs. To authenticate the developer hub:
+When opening VS Code for the first time, you'll want to authorize the developer hub. The developer hub is a regular Salesforce org (your production org for instance), that has the Dev Hub permission enabled and along with Salesforce DX, is used to spin up scratch orgs. To authenticate the developer hub:
 
 -   Open VS Code
 -   Use the command palette (Cntrl + Shift + P or Cmd + Shift + P on Macs) and type "Authorize a Dev Hub"
     ![Authorize a Dev Hub via the Command Palette](./misc/img/authdevhub.png)
--   This will open your default browser to dcs.my.salesforce.com (as configured in `sfdx-project.json`). Log in with your SSO credentials.
+-   This will open your default browser to login.salesforce.com (as configured in `sfdx-project.json`). Log in with your Salesforce credentials.
 -   Authorize the app, if prompted.
 
 ### Working with an existing Salesforce org for the first time
@@ -62,8 +90,8 @@ If you're getting started on a project where there's an existing code base, then
     -   Use the command palette (Cntrl + Shift + P or Cmd + Shift + P on Macs) and type "Authorize an Org"
         ![Authorize Org via the Command Palette](./misc/img/authorg.png)
     -   This will open a secondary menu to select project default, production, sandbox, or custom url.
-        > You'll likely want to select sandbox or possibly production or custom url. The project default is the Demand Chain my domain url, so you do NOT want this one.
-    -   Specify a name / alias for the org. This can be anything, but should be descriptive, such as dc-dev-sandbox.
+        > You'll likely want to select sandbox or possibly production or custom url. Make sure to select the proper choice here.
+    -   Specify a name / alias for the org. This can be anything, but should be descriptive.
     -   Your browser will open to the domain you chose.
     -   Log in with username and password.
     -   Authorize the DX application if prompted.
@@ -92,7 +120,7 @@ If you're ready to commit the file to source control, you have a few options. Th
 
 #### Git Primer
 
-When you check stuff into github or bitbucket or other git services, you're really dealing with 2 repositories, your local repository and typically a cloud-hosted or remote repository. You can totally get by with just a local repository, but for working in the same repository as a team, then you'll also need a cloud-hosted service such as Demand Chain's chosen service, GitHub.
+When you check stuff into github or bitbucket or other git services, you're really dealing with 2 repositories, your local repository and typically a cloud-hosted or remote repository. You can totally get by with just a local repository, but for working in the same repository as a team, then you'll also need a cloud-hosted service such as GitHub.
 
 When you download a repository from a remote repo, such as one stored in github, it's called `cloning a repository`, and creates a point in time copy of the source on your local workspace. When you start editing files, they become untracked changes and show up in your VS Code git extension as a little notice. In the screenshot below, I have 9 changes or changes I've made that differ from what my local repository is expecting.
 
@@ -106,7 +134,7 @@ After commit the changes to your local repository, the final step is to push the
 
 ## Recommended Visual Studio Code Extensions
 
-Below are a few of the extensions Demand Chain recommends for use with Visual Studio Code. These extensions can be installed via the market place within VS Code.
+Below are a few of my favorite extensions for Visual Studio Code. These extensions can be installed via the market place within VS Code.
 
 -   Salesforce Extension Pack (of course!)
 -   Salesforce Documenter (for adding documentation headers to Apex classes, triggers, LWCs, etc.)

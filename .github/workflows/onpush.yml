@@ -1,4 +1,4 @@
-name: Aisle9
+name: sfdx-template on push
 
 on: [push]
 
@@ -8,13 +8,13 @@ jobs:
     name: Run PMD, Format code with prettier, and Lint LWCs
     steps:
       - uses: sfdx-actions/setup-pmd@v1
-        
+
       - name: "Checkout code"
         uses: actions/checkout@v2
-        
+
       - name: Run Apex PMD Static (Code Analyzer)
         run: pmd -d ./force-app/main/default/classes -R category/apex/design.xml -f text
-        
+
       # Cache node_modules to speed up the process
       - name: Restore node_modules cache
         id: cache-npm
@@ -25,16 +25,16 @@ jobs:
           restore-keys: |
             npm-${{ env.cache-name }}-
             npm-
-              
+
       # Install npm dependencies for Prettier and Jest
       - name: 'Install npm dependencies'
         if: steps.cache-npm.outputs.cache-hit != 'true'
         run: npm install
-        
+
       # Prettier formatting
       - name: 'Code formatting verification with Prettier'
-        run: npm run prettier --write --check         
-        
+        run: npm run prettier --write --check
+
       #Commit prettified files if they differ from repo
       - name: Commit prettified files (if any)
         run: |
@@ -43,7 +43,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git commit -m "Prettified code!" -a | exit 0
-          
+
       - name: Push prettified changes (if any)
         uses: ad-m/github-push-action@master
         with:

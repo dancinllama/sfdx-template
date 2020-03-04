@@ -7,5 +7,5 @@
     ],
     "namespace": "",
     "sourceApiVersion": "48.0",
-    "sfdcLoginUrl": "https://dcs.my.salesforce.com"
+    "sfdcLoginUrl": "https://login.salesforce.com"
 }
