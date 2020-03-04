@@ -2,7 +2,7 @@
 
 ## Build Status
 
-![SFDX Template Commit Flow](https://github.com/dancinllama/aisle9/workflows/onpush/badge.svg)
+![sfdx-template on push](https://github.com/dancinllama/sfdx-template/workflows/sfdx-template%20on%20push/badge.svg)
 
 ## Deploy to a Scratch Org
 
