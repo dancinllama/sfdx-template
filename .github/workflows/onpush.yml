@@ -7,8 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Run PMD, Format code with prettier, and Lint LWCs
     steps:
-      - uses: sfdx-actions/setup-pmd@v1
-
       - name: "Checkout code"
         uses: actions/checkout@v2
 
