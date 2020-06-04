@@ -1,0 +1,86 @@
+name: sfdx-template on push
+
+on: [push]
+
+jobs:
+  onpush:
+    runs-on: ubuntu-latest
+    name: Retrieve code and check into repository
+    container: salesforce/salesforcedx
+    steps:
+      - name: "Update container version of git"
+        run: |
+           apt-get update && apt-get install software-properties-common -y && apt-add-repository ppa:git-core/ppa && apt-get update && apt-get install -y git
+          
+      - name: "Add Accenture Powerkit Plugin"
+        run: echo 'y' | sfdx plugins:install sfpowerkit
+      
+      - name: "Checkout code"
+        uses: actions/checkout@v2
+      
+      - name: "Configure Git"
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+        
+      - name: Authenticate with SFDX using username and password, and set as default for additional sdfx commands
+        run: sfdx sfpowerkit:auth:login -r ${{ secrets.SALESFORCE_URL }} -u ${{ secrets.SALESFORCE_USERNAME }} -p ${{ secrets.SALESFORCE_PASSWORD }} -a checkout
+        
+      - name: Set Default SFDX target org
+        run: sfdx force:config:set defaultusername=checkout
+        
+      - name: Make reports directory
+        run: mkdir -p ./reports
+
+      - name: Run Apex PMD Static (Code Analyzer)
+        run: |
+          touch ./reports/pmd.json
+          sfdx sfpowerkit:source:pmd -d ./force-app/main/default -r category/apex/design.xml -f json -o ./reports/pmd.json || true
+          git add ./reports
+          git commit -m "Auto-generated PMD report"  || true
+      
+      - name: Run Code Coverage
+        run: |
+          sfdx force:apex:test:run -c -u checkout -r json > ./reports/codecoverage.json || true
+          git add ./reports
+          git commit -m "Auto-generated code coverage report" || true
+          
+      - name: Run Health Check
+        run: | 
+          sfdx sfpowerkit:org:healthcheck --json > ./reports/healthcheck.json    
+          git add ./reports
+          git commit -m "Auto-generated healthcheck report"
+         
+      # Cache node_modules to speed up the process
+      - name: Restore node_modules cache
+        id: cache-npm
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-${{ env.cache-name }}-
+            npm-
+
+      # Install npm dependencies for Prettier and Jest
+      - name: 'Install npm dependencies'
+        if: steps.cache-npm.outputs.cache-hit != 'true'
+        run: npm install
+
+      # Prettier formatting
+      - name: 'Code formatting verification with Prettier'
+        run: npm run prettier --write --check || true
+
+      # Commit prettified files if they differ from repo
+      - name: Commit prettified files (if any)
+        run: |
+          git add .
+          git commit -m "Prettified code" || true
+
+      - name: Push reports and prettified changes
+        uses: ad-m/github-push-action@master
+        with:
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+         
+      - name: Push changes to Salesforce
+        run: sfdx force:source:deploy -x ./manifest/package.xml -u checkout
