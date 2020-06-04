@@ -36,20 +36,14 @@ jobs:
         run: |
           touch ./reports/pmd.json
           sfdx sfpowerkit:source:pmd -d ./force-app/main/default -r category/apex/design.xml -f json -o ./reports/pmd.json || true
-          git add ./reports
-          git commit -m "Auto-generated PMD report"  || true
-      
+       
       - name: Run Code Coverage
         run: |
           sfdx force:apex:test:run -c -u checkout -r json > ./reports/codecoverage.json || true
-          git add ./reports
-          git commit -m "Auto-generated code coverage report" || true
           
       - name: Run Health Check
         run: | 
           sfdx sfpowerkit:org:healthcheck --json > ./reports/healthcheck.json    
-          git add ./reports
-          git commit -m "Auto-generated healthcheck report"
          
       # Cache node_modules to speed up the process
       - name: Restore node_modules cache
@@ -75,7 +69,7 @@ jobs:
       - name: Commit prettified files (if any)
         run: |
           git add .
-          git commit -m "Prettified code" || true
+          git commit -m "Generated reports and Prettified code" || true
 
       - name: Push reports and prettified changes
         uses: ad-m/github-push-action@master
