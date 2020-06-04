@@ -1,0 +1,70 @@
+name: sfdx-template on create
+
+#This action will run only on a repository_dispatch of type "created_from_template".
+#A repository dispatch is an API call into github using the following URI:  /repos/:owner/:repo/dispatches
+#created_from_template is a custom name I am sending via the API to kick off the action.
+#More on actions and what events can kick them off can be found here:  https://help.github.com/en/actions/reference/events-that-trigger-workflows
+on:
+  repository_dispatch:
+    types: [created_from_template,refresh]
+
+jobs:
+  oncreate:
+    runs-on: ubuntu-latest
+    name: Retrieve code and check into repository
+    container: salesforce/salesforcedx
+    steps:
+      - name: "Update container version of git"
+        run: |
+           apt-get update && apt-get install software-properties-common -y && apt-add-repository ppa:git-core/ppa && apt-get update && apt-get install -y git
+          
+      - name: "Add Accenture Powerkit Plugin"
+        run: echo 'y' | sfdx plugins:install sfpowerkit
+      
+      - name: "Checkout code"
+        uses: actions/checkout@v2
+      
+      - name: "Configure Git"
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+        
+      - name: Authenticate with SFDX using username and password, and set as default for additional sdfx commands
+        run: sfdx sfpowerkit:auth:login -r ${{ secrets.SALESFORCE_URL }} -u ${{ secrets.SALESFORCE_USERNAME }} -p ${{ secrets.SALESFORCE_PASSWORD }} -a checkout
+        
+      - name: Set Default SFDX target org
+        run: sfdx force:config:set defaultusername=checkout
+        
+      - name: Retrieve source from Salesforce organization
+        run: |
+          sfdx force:source:retrieve -x ./manifest/package.xml
+          cd ./force-app/main/default/staticresources
+          find . -name .git -type d -exec rm -rf {} \; || true
+          cd ../../../../
+          
+      - name: Make reports directory
+        run: mkdir -p ./reports
+
+      - name: Run Apex PMD Static (Code Analyzer)
+        run: |
+          touch ./reports/pmd.json
+          sfdx sfpowerkit:source:pmd -d ./force-app/main/default -r category/apex/design.xml -f json -o ./reports/pmd.json || true
+          git add ./reports
+          git commit -m "Auto-generated PMD report"  || true
+      
+      - name: Run Code Coverage
+        run: |
+          sfdx force:apex:test:run -c -u checkout -r json > ./reports/codecoverage.json || true
+          git add ./reports
+          git commit -m "Auto-generated code coverage report" || true
+          
+      - name: Run Health Check
+        run: | 
+          sfdx sfpowerkit:org:healthcheck --json > ./reports/healthcheck.json    
+          git add ./reports
+          git commit -m "Auto-generated healthcheck report"
+
+      - name: Push reports
+        uses: ad-m/github-push-action@master
+        with:
+         github_token: ${{ secrets.GITHUB_TOKEN }}
