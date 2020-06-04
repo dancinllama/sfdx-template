@@ -1,0 +1,33 @@
+{
+  "highriskitems": [
+    "Expired Certificate",
+    "Lock sessions to the domain in which they were first used",
+    "Let users verify their identity by text (SMS)",
+    "Enable clickjack protection for customer Visualforce pages with standard headers",
+    "Enable clickjack protection for customer Visualforce pages with headers disabled",
+    "Require HttpOnly attribute",
+    "Require secure connections (HTTPS) for all third-party domains",
+    "Number of Objects with Default External Access Set to Public",
+    "Require a minimum 1 day password lifetime",
+    "Force relogin after Login-As-User",
+    "Enforce login IP ranges on every request",
+    "Enable XSS protection",
+    "Enable Content Sniffing protection",
+    "Obscure secret answer for password resets",
+    "Force logout on session timeout",
+    "Require identity verification for email address changes",
+    "Enable HSTS for all Sites and Communities with the default force.com subdomain that require a secure connection (HTTPS)"
+  ],
+  "mediumriskitems": [
+    "Maximum invalid login attempts",
+    "Password complexity requirement",
+    "Lockout effective period"
+  ],
+  "lowriskitems": [],
+  "informationalriskitems": [],
+  "score": "46"
+}
+{
+  "status": 0,
+  "result": true
+}
