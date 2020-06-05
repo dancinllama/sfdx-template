@@ -77,4 +77,7 @@ jobs:
          github_token: ${{ secrets.GITHUB_TOKEN }}
          
       - name: Push changes to Salesforce
-        run: sfdx force:source:deploy -x ./manifest/package.xml -u checkout
+        run: |
+          sfdx force:source:convert -d ./metadata
+          sfdx force:source:deploy -d ./metadata -u checkout
+          rm -rf ./metadata
