@@ -11,6 +11,7 @@
 ## Table of Contents
 
 -   [Description](#description)
+-   [Github Action Magic](#github-action-magic)
 -   [Getting started with this template](#getting-started-with-this-template)
 -   [Starting with VS Code](#starting-with-vs-code)
     -   [Authenticate with the Developer Hub](#authenticate-with-the-developer-hub)
@@ -34,9 +35,33 @@ This repository is a template for SFDX projects. It includes the following:
     -   Runs static code analyzer on push to the repository.
     -   Automatically prettifies Lightning Web Components, Lightning Components, Apex, Visualforce and more, and commits the updates.
 
+## Github Action Magic
+This template comes with two actions:
+- On Template Create
+
+    This action is used for when first creating a repository from this template.  Currently, Github does *NOT* have an action event for  running actions when repositories are generated from a template.  However, this action can be kicked off by an API call to Github.      In  order to kick off the action, use a Github Personal Access Token and call the repository dispatch endpoint, documented here:     https://developer.github.com/v3/repos/#create-a-repository-dispatch-event.  In the body of the dispatch request, specify an event_type of "created_from_template", and it should kick off this action.
+
+    *What does this action do?*  It fetches all the code, specified in manifest/package.xml from your Salesforce org.  To do so, the action looks for three Github secrets: SALESFORCE_URL, SALESFORCE_USERNAME, and SALESFORCE_PASSWORD.
+        1. SALESFORCE_URL is the url to use when logging in.  Either https://login.salesorce.com, https://test.salesforce.com, or your My Domain.
+        2. SALESFORCE_USERNAME is the username for authenticating with Salesforce.
+        3. SALESFORCE_PASSWORD is the password AND security token if needed.  Please note, these are stored in an encrypted field that is NOT visible to anyone after the secret is initially created.
+  
+    In addition to retrieving the files from Salesforce, the action also runs three reports against the org, storing them in the ./reports folder in a JSON format:
+        1. Code Coverage report
+        2. Apex PMD report
+        3. Org Health Check.
+  
+ - On Pull Request
+ 
+     This action is run whenever a pull request is approved from one branch to another.  This action performs the following:
+         1. Re-runs the code coverage, healthcheck, and code coverage reports.
+         2. Formats code using Prettier
+         3. Pushes any changes up to the Salesforce org, using the SALESFORCE_URL, SALESFORCE_USERNAME, and SALESFORCE_PASSWORD credentials.
+
+
 ## Getting started with this template
 
--   Copy the template to a new repository
+*   Copy the template to a new repository
 
     -   Click on `Use this template` button on the sfdx-template repository home page
 
@@ -45,6 +70,15 @@ This repository is a template for SFDX projects. It includes the following:
     -   Fill in the desired information on the new repository form.
 
     ![new repository form](./misc/img/newtemplateform.png)
+    
+* Specify the SALESFORCE_URL, SALESFORCE_USERNAME, and SALESFORCE_PASSWORD Github Secrets
+    If you're utilizing the SFDX functionality of this template, be sure to set these secrets.  Keep in mind that SALESFORCE_PASSWORD is your PW + Security Token.  These values are also encrypted (Using lib sodium and Base64) and are not visible after you set them.  To create these secrets:
+    -  On your repository page, click on "Settings" located at the top of the repository page, in the navigation bar.
+    -  On the settings page, click on "Secrets" on the left-hand side  (near the bottom of the list).
+    -  Enter the SALESFORCE_URL  (https://login.salesforce.com, https://test.salesforce.com, or https://mydomain...)
+    -  Enter the SALESFORCE_USERNAME secret.
+    -  Enter the SALESFORCE_PASSWORD secret, which is the Password concatenated with the security token.
+        
 
 *   Clone that repository to your local workspace.
 
