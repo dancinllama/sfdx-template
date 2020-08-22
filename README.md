@@ -1,3 +1,5 @@
+# Checkout a demo of using this template here: https://www.twitch.tv/videos/718227060
+
 # Template for SFDX Projects
 
 ## Build Status
